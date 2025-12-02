@@ -1,29 +1,115 @@
-# Problem 2 #
 
-Following is explanation of code where is issue and how to improve them refactored working code is in Solution.tsx file
+# ✅ Problem 3 — Issues & Improvements
 
-1) 
-issue: getPriority(balance.blockchain) was being used but blockchain didn’t exist → caused runtime/TS error
-solution: needs to add blockchain: string to WalletBalance Interface
-2) 
-issue :lhsPriority is not defined inside filter function 
-solution : balancePriority variable to be used instead lhsPriority variable
-3) 
-issue :filter function condion is not correct 
-solution : can add condition return balancePriority > -99 && balance.amount > 0; instead of if block
-4) 
-issue:  sort logic can be simplified for descendesing sort
-solution : can add return rightPriority - leftPriority instead of if blocks in sort 
-5) 
-issue : prices is not not used in sorting
-solution : removed prices from sort depedency array
-6) 
-issue: formattedBalances is not used
-solution : in rows use formattedBalances.map() instead sortedBalances.map()
-7) 
-issue : in formattedBalances balance.amount.toFixed()
-solution:  2 can use inside toFixed(2) for better currancy formatting
-8) 
-issue : in rows map usdValues prices[balance.currency] can be undefined
-solution: we can handle this safely by adding 0 as default value
-eg:  const usdValue = (prices[balance.currency] || 0) * balance.amount;
+Below is a well-structured list of issues found in the codebase and how each one was fixed.  
+The full **refactored, working code** is available in `Solution.tsx`.
+
+----------
+
+## **1. Missing property in `WalletBalance` interface**
+
+### ❌ Issue
+
+`getPriority(balance.blockchain)` was used, but `blockchain` was **not defined** in the `WalletBalance` interface → caused TypeScript/runtime errors.
+
+### ✅ Fix
+
+Add `blockchain: string` to the interface.
+
+----------
+
+## **2. Incorrect variable used in `filter` callback**
+
+### ❌ Issue
+
+`lhsPriority` was referenced inside the filter function but not defined.
+
+### ✅ Fix
+
+Use the correct variable `balancePriority`.
+
+----------
+
+## **3. Incorrect filter condition**
+
+### ❌ Issue
+
+The filter logic was overly complex and incorrectly structured.
+
+### ✅ Fix
+
+Simplify the condition:
+
+`return balancePriority > -99 && balance.amount > 0;` 
+
+This removes the unnecessary `if` block.
+
+----------
+
+## **4. Sorting logic can be simplified**
+
+### ❌ Issue
+
+Sorting was written with multiple `if` statements.
+
+### ✅ Fix
+
+Use a simpler descending-priority sort:
+
+`return rightPriority - leftPriority;` 
+
+----------
+
+## **5. `prices` included incorrectly in dependency array**
+
+### ❌ Issue
+
+`prices` was unnecessarily included in the sort `useMemo` dependency list.
+
+### ✅ Fix
+
+Remove `prices` from dependencies since sorting does not use it.
+
+----------
+
+## **6. `formattedBalances` not used**
+
+### ❌ Issue
+
+The UI (`rows`) used `sortedBalances.map()` instead of `formattedBalances.map()`.
+
+### ✅ Fix
+
+Update the rows to use:
+
+`formattedBalances.map(...)` 
+
+----------
+
+## **7. Incorrect currency formatting with `toFixed()`**
+
+### ❌ Issue
+
+`balance.amount.toFixed()` did not specify a decimal limit.
+
+### ✅ Fix
+
+Use:
+
+`balance.amount.toFixed(2)` 
+
+This ensures better currency formatting.
+
+----------
+
+## **8. Missing safety check for token price**
+
+### ❌ Issue
+
+`prices[balance.currency]` may be `undefined`, causing `NaN`.
+
+### ✅ Fix
+
+Provide a safe default value of `0`:
+
+`const usdValue = (prices[balance.currency] || 0) * balance.amount;`
